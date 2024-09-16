@@ -21,7 +21,11 @@
               :id="component.id"
               :active="component.id === (currentElement && currentElement.id)"
             >
-              <component :is="component.name" v-bind="component.props" />
+              <component
+                :is="component.name"
+                v-bind="component.props"
+                class="zdy-component"
+              />
             </edit-wrapper>
           </div>
         </a-layout-content>
@@ -47,12 +51,54 @@
 </template>
 
 <script lang="ts">
+import { GlobalDataProps } from "@/store";
 import { computed, defineComponent } from "vue";
+import { useStore } from "vuex";
+import LText from "../components/LText.vue";
+import EditWrapper from "../components/EditorWrapper.vue";
+import ComponentsList from "../components/ComponentsList.vue";
+import PropsTable from "../components/PropsTable.vue";
+import { defaultTextTemplates } from "../defaultTemplates";
+import { TextComponentProps } from "@/defaultProps";
+import { ComponentData } from "@/store/editor";
 
-export default defineComponent({});
+export default defineComponent({
+  components: {
+    LText,
+    ComponentsList,
+    EditWrapper,
+    PropsTable,
+  },
+  setup() {
+    const store = useStore<GlobalDataProps>();
+    const components = computed(() => store.state.editor.components);
+    const currentElement = computed<ComponentData | null>(
+      () => store.getters.getCurrentElement
+    );
+    console.log("currentElement", currentElement);
+    const addItem = (data: Partial<TextComponentProps>) => {
+      store.commit("addComponent", data);
+    };
+    const setActive = (id: string) => {
+      store.commit("setActive", id);
+    };
+    const handleChange = (e: any) => {
+      console.log("eve", e);
+      store.commit("updateComponent", e);
+    };
+    return {
+      components,
+      defaultTextTemplates,
+      currentElement,
+      handleChange,
+      addItem,
+      setActive,
+    };
+  },
+});
 </script>
 
-<style>
+<style scoped>
 .editor-container .preview-container {
   padding: 24px;
   margin: 0;
@@ -74,5 +120,10 @@ export default defineComponent({});
   position: fixed;
   margin-top: 50px;
   max-height: 80vh;
+}
+.zdy-component:after {
+  content: "";
+  display: block;
+  clear: both;
 }
 </style>
