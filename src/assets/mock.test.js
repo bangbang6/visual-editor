@@ -1,3 +1,4 @@
+/* eslint-disable */
 import { getUsername } from "./user";
 import axios from "axios";
 /** jest接管axios的所有实现 */

@@ -1,3 +1,4 @@
+/* eslint-disable */
 const fetchUser = (cb) => {
   setTimeout(() => {
     cb("hello");

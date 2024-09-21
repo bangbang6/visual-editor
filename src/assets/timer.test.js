@@ -1,3 +1,4 @@
+/* eslint-disable */
 /** jest接管等时间 */
 const fetchUser = (cb) => {
   setTimeout(() => {

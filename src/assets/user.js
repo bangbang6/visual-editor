@@ -1,3 +1,4 @@
+/* eslint-disable */
 import axios from "axios";
 export function getUsername(id) {
   return axios

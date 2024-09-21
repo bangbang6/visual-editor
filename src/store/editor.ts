@@ -41,6 +41,7 @@ export const testComponents: ComponentData[] = [
       lineHeight: "2",
       textAlign: "left",
       fontFamily: "",
+      color: "#000000",
     },
   },
   {
