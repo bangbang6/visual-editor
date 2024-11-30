@@ -10,7 +10,7 @@ import axios from "axios";
 /** 重写get方法返回 */
 // axios.get.mockReturnValue(Promise.resolve({ data: { username: "mengwan" } }));
 /** 重写get方法返回Promise */
-axios.get.mockResolvedValue({ data: { username: "mengwan" } });
+// axios.get.mockResolvedValue({ data: { username: "mengwan" } });
 /** mock一个函数的返回值 */
 
 const mockTest = (shouldCall, cb) => {

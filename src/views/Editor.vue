@@ -55,16 +55,17 @@ import { GlobalDataProps } from "@/store";
 import { computed, defineComponent } from "vue";
 import { useStore } from "vuex";
 import LText from "../components/LText.vue";
+import LImage from "../components/LImage.vue";
 import EditWrapper from "../components/EditorWrapper.vue";
 import ComponentsList from "../components/ComponentsList.vue";
 import PropsTable from "../components/PropsTable.vue";
 import { defaultTextTemplates } from "../defaultTemplates";
-import { TextComponentProps } from "@/defaultProps";
 import { ComponentData } from "@/store/editor";
 
 export default defineComponent({
   components: {
     LText,
+    LImage,
     ComponentsList,
     EditWrapper,
     PropsTable,
@@ -72,11 +73,12 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>();
     const components = computed(() => store.state.editor.components);
+    console.log("components", components);
     const currentElement = computed<ComponentData | null>(
       () => store.getters.getCurrentElement
     );
     console.log("currentElement", currentElement);
-    const addItem = (data: Partial<TextComponentProps>) => {
+    const addItem = (data: any) => {
       store.commit("addComponent", data);
     };
     const setActive = (id: string) => {

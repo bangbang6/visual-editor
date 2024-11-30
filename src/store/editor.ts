@@ -1,7 +1,7 @@
 import { Module } from "vuex";
 import { GlobalDataProps } from "./index";
 import { v4 as uuidv4 } from "uuid";
-import { TextComponentProps } from "@/defaultProps";
+import { ImageComponentProps, TextComponentProps } from "@/defaultProps";
 
 export interface EditorProps {
   // 供中间编辑器渲染的数组
@@ -12,7 +12,7 @@ export interface EditorProps {
 }
 export interface ComponentData {
   // 这个元素的 属性，属性请详见下面 Partial全部变成问号
-  props: Partial<TextComponentProps>;
+  props: Partial<TextComponentProps & ImageComponentProps>;
   // id，uuid v4 生成
   id: string;
   // 业务组件库名称 l-text，l-image 等等
@@ -65,13 +65,8 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     currentElement: "",
   },
   mutations: {
-    addComponent(state, data) {
-      const newComponent: ComponentData = {
-        id: uuidv4(),
-        name: "l-text",
-        props: data,
-      };
-      state.components.push(newComponent);
+    addComponent(state, component: ComponentData) {
+      state.components.push(component);
     },
     setActive(state, id) {
       state.currentElement = id;
