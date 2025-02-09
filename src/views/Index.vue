@@ -25,7 +25,7 @@ import { useStore } from "vuex";
 export default defineComponent({
   name: "Index",
   components: {
-    UserProfile,
+    // UserProfile,
   },
   setup() {
     const store = useStore<GlobalDataProps>();

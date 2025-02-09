@@ -6,7 +6,8 @@
       class="component-item"
       @click="onItemClick(item)"
     >
-      <l-text v-bind="item"></l-text>
+      <!-- <l-text v-bind="item"></l-text> -->
+      <l-text2 tag="h2" text="122112"></l-text2>
     </div>
   </div>
   <StyledUploader @success="onImageUploaded" />
@@ -30,7 +31,7 @@ export default defineComponent({
     },
   },
   components: {
-    LText,
+    // LText,
     StyledUploader,
   },
   emits: ["on-item-click"],
