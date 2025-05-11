@@ -14,14 +14,18 @@
     "ant-design-vue": "^4.2.3",
     "axios": "^0.21.1",
     "core-js": "^3.6.5",
+    "cropperjs": "1.5.9",
     "flush-promises": "^1.0.2",
+    "hotkeys-js": "^3.13.9",
     "lodash-es": "^4.17.21",
+    "path-to-regexp": "^8.2.0",
     "rgb-hex": "^4.1.0",
     "uuid": "^10.0.0",
     "vue": "^3.0.0",
+    "vue-draggable-next": "^1.0.5",
     "vue-router": "^4.4.3",
-    "vuex": "^4.1.0",
-    "lego-mw-components": "1.0.0"
+    "vuedraggable": "^4.1.0",
+    "vuex": "^4.1.0"
   },
   "devDependencies": {
     "@babel/plugin-transform-modules-commonjs": "^7.24.8",

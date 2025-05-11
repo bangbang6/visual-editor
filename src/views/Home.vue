@@ -7,8 +7,10 @@
 <script lang="ts">
 import TemplateList from "@/components/TemplateList.vue";
 import { GlobalDataProps } from "@/store";
-import { computed, defineComponent } from "vue";
+import { computed, defineComponent, onMounted } from "vue";
 import { useStore } from "vuex";
+import { message } from "ant-design-vue";
+import axios from "axios";
 export default defineComponent({
   components: {
     TemplateList,
@@ -16,6 +18,10 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>();
     const testData = computed(() => store.state.templates.data);
+    const currentUser = computed(() => store.state.user);
+    onMounted(() => {
+      store.dispatch("fetchTemplates");
+    });
     return {
       testData,
     };

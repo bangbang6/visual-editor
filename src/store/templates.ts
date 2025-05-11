@@ -1,5 +1,32 @@
-import { Module } from "vuex";
-import { GlobalDataProps } from "./index";
+import { ActionContext, Module } from "vuex";
+import { RespListData } from "./respTypes";
+import { ActionPayload, GlobalDataProps } from "./index";
+import axios, { AxiosRequestConfig } from "axios";
+import { compile } from "path-to-regexp";
+export const actionWrapper = (
+  url: string,
+  commitName: string,
+  config: AxiosRequestConfig = { method: "get" }
+) => {
+  return async (
+    context: ActionContext<any, any>,
+    payload: ActionPayload = {}
+  ) => {
+    const { urlParams, data } = payload;
+
+    const newConfig = { ...config, data: payload, opName: commitName };
+    let newURL = url;
+    if (urlParams) {
+      const toPath = compile(url, { encode: encodeURIComponent });
+      newURL = toPath(urlParams);
+      console.log("newURL", newURL);
+    }
+    const resp = await axios(newURL, newConfig);
+    context.commit(commitName, resp.data);
+    return data;
+  };
+};
+
 export interface TemplateProps {
   id: number;
   title: string;
@@ -64,7 +91,15 @@ export interface TemplatesProps {
 
 const templates: Module<TemplatesProps, GlobalDataProps> = {
   state: {
-    data: testData,
+    data: [],
+  },
+  mutations: {
+    fetchTemplates(state, rawData: RespListData<TemplateProps>) {
+      state.data = rawData.data.list;
+    },
+  },
+  actions: {
+    fetchTemplates: actionWrapper("/templates", "fetchTemplates"),
   },
   getters: {
     getTemplateById: (state) => (id: number) => {

@@ -61,11 +61,13 @@ export interface TextComponentProps extends CommonComponentProps {
   textAlign: string;
   color: string;
   backgroundColor: string;
+  src?: string;
 }
 export interface ImageComponentProps extends CommonComponentProps {
-  src: string;
+  imageSrc: string;
 }
-export const textDefaultProps: TextComponentProps = {
+
+export const textDefaultProps = {
   // basic props - font styles
   text: "正文内容",
   fontSize: "14px",
@@ -78,11 +80,44 @@ export const textDefaultProps: TextComponentProps = {
   color: "#000000",
   backgroundColor: "",
   ...commonDefaultProps,
+  width: "318px",
 };
-export const imageDefaultProps: ImageComponentProps = {
-  src: "test.url",
+interface DefaultPropsType {
+  [key: string]: {
+    props: object;
+    extraProps?: { [key: string]: any };
+  };
+}
+export const imageDefaultProps = {
+  imageSrc: "",
   ...commonDefaultProps,
 };
+// this contains all default props for all the components
+// useful for inserting new component into the store
+export const componentsDefaultProps: DefaultPropsType = {
+  " ": {
+    props: {
+      ...textDefaultProps,
+      fontSize: "14px",
+      width: "125px",
+      height: "36px",
+      left: 320 / 2 - 125 / 2 + "px",
+      top: 500 / 2 - 36 / 2 + "px",
+    },
+  },
+  "l-image": {
+    props: {
+      ...imageDefaultProps,
+    },
+  },
+  "l-shape": {
+    props: {
+      backgroundColor: "",
+      ...commonDefaultProps,
+    },
+  },
+};
+
 export const transformToComponentProps = <T extends { [key: string]: any }>(
   props: T
 ) => {

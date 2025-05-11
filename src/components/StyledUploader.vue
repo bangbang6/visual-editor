@@ -1,7 +1,7 @@
 <template>
   <uploader
     class="styled-uploader"
-    action="http://yishen-manjaro:3000/upload"
+    action="http://localhost:3000/api/utils/upload-img"
     :showUploadList="false"
     :beforeUpload="commonUploadCheck"
     @success="

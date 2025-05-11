@@ -49,3 +49,31 @@ export const getImageDimensions = (url: string | File) => {
     });
   });
 };
+export interface UploadImgProps {
+  data: {
+    urls: string[];
+  };
+  errno: number;
+  file: File;
+}
+export const insertAt = (arr: any[], index: number, newItem: any) => {
+  return [...arr.slice(0, index), newItem, ...arr.slice(index)];
+};
+export function clickInsideElement(e: Event, className: string) {
+  let el = e.target as HTMLElement;
+  if (el.classList.contains(className)) {
+    return el;
+  } else {
+    while (el) {
+      if (el.classList && el.classList.contains(className)) {
+        return el;
+      } else {
+        el = el.parentNode as HTMLElement;
+      }
+    }
+  }
+  return false;
+}
+export function isMobile(mobile: string) {
+  return /^1[3-9]\d{9}$/.test(mobile);
+}

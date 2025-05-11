@@ -137,20 +137,16 @@ export default defineComponent({
           readyFile.status = "success";
           readyFile.resp = resp.data;
           emit("success", {
-            resp: resp.data,
+            resp: {
+              url: resp?.data?.data?.urls[0],
+              list: filesList.value,
+              file: readyFile,
+            },
             file: readyFile,
-            list: filesList.value,
           });
         })
         .catch((e: any) => {
           readyFile.status = "error";
-
-          emit("success", {
-            resp: {
-              url: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRJ9aqANa_pI940nr9GVxSf-VrfnuBXk19rOA&s",
-            },
-            file: { raw: readyFile },
-          });
         })
         .finally(() => {
           if (fileInput.value) {

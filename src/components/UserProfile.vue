@@ -9,7 +9,9 @@
   </a-button>
   <div v-else>
     <a-dropdown-button class="user-profile-component">
-      <router-link to="/setting">{{ user.userName }}</router-link>
+      <router-link to="/setting">{{
+        user.data && user.data.nickName
+      }}</router-link>
       <template v-slot:overlay>
         <a-menu class="user-profile-dropdown">
           <a-menu-item key="0" @click="logout">登出</a-menu-item>
@@ -34,12 +36,12 @@ export default defineComponent({
       required: true,
     },
   },
-  setup() {
+  setup(props) {
+    console.log("user", props.user);
     const store = useStore();
     const router = useRouter();
     const login = () => {
-      store.commit("login");
-      message.success("登录成功", 2);
+      router.push("/login");
     };
     const logout = () => {
       store.commit("logout");

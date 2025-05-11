@@ -12,8 +12,8 @@
   </ul>
   <hello msg="1234"></hello>
 </template>
-  
-  <script lang="ts">
+
+<script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
 import Hello from "./Hello.vue";
 import axios from "axios";
@@ -49,7 +49,6 @@ export default defineComponent({
       axios
         .get("https://jsonplaceholder.typicode.com/users/1")
         .then((resp) => {
-          console.log(resp);
           user.data = resp.data;
         })
         .catch(() => {

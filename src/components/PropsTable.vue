@@ -30,6 +30,10 @@ import { computed, defineComponent, PropType, VNode } from "vue";
 import { mapPropsToForms } from "../propsMap";
 import RenderVnode from "./RenderVNode";
 import ColorPicker from "./ColorPicker.vue";
+import ImageProcesser from "./ImageProcesser.vue";
+import ShadowPicker from "./ShadowPicker.vue";
+import BackgroundProcesser from "./BackgroundProcesser.vue";
+
 interface FormProps {
   component?: string;
   subComponent?: string;
@@ -48,7 +52,13 @@ export default defineComponent({
       type: Object as PropType<TextComponentProps>,
     },
   },
-  components: { RenderVnode, ColorPicker },
+  components: {
+    RenderVnode,
+    ColorPicker,
+    ImageProcesser,
+    ShadowPicker,
+    BackgroundProcesser,
+  },
   emits: ["change"],
   setup(props, context) {
     const finalProps = computed(() => {
@@ -61,9 +71,11 @@ export default defineComponent({
             const {
               valueProp = "value",
               eventName = "change",
+              // @ts-ignore
               initalTransform,
               afterTransform,
             } = item;
+
             const newItem: FormProps = {
               ...item,
               value: initalTransform ? initalTransform(value) : value,
@@ -86,6 +98,7 @@ export default defineComponent({
         {} as { [key: string]: FormProps }
       );
     });
+    console.log("finalProps", finalProps);
     return {
       finalProps,
     };

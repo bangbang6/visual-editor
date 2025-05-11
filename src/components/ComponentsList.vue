@@ -6,8 +6,8 @@
       class="component-item"
       @click="onItemClick(item)"
     >
-      <!-- <l-text v-bind="item"></l-text> -->
-      <l-text2 tag="h2" text="122112"></l-text2>
+      <l-text v-bind="item"></l-text>
+      <!-- <l-text2 v-bind="item"></l-text2> -->
     </div>
   </div>
   <StyledUploader @success="onImageUploaded" />
@@ -31,11 +31,12 @@ export default defineComponent({
     },
   },
   components: {
-    // LText,
+    LText,
     StyledUploader,
   },
   emits: ["on-item-click"],
   setup(props, context) {
+    console.log("list", props.list);
     const onItemClick = (props: Partial<TextComponentProps>) => {
       const data: ComponentData = {
         name: "l-text",
@@ -44,7 +45,7 @@ export default defineComponent({
       };
       context.emit("on-item-click", data);
     };
-    const onImageUploaded = (resp: UploadResp) => {
+    const onImageUploaded = (resp: any) => {
       const data: ComponentData = {
         name: "l-image",
         id: uuidv4(),
@@ -53,8 +54,9 @@ export default defineComponent({
         },
       };
       message.success("上传成功");
-      data.props.src = resp.resp.url;
-      getImageDimensions(resp.resp.url).then((dimensions) => {
+      console.log("resp", resp);
+      data.props.imageSrc = resp?.resp?.url;
+      getImageDimensions(resp?.resp?.url).then((dimensions) => {
         const { width } = dimensions;
         const maxWidth = 373;
 
@@ -69,3 +71,13 @@ export default defineComponent({
   },
 });
 </script>
+<style>
+.component-item {
+  width: 100px;
+  margin: 0 auto;
+  margin-bottom: 15px;
+}
+.component-item > * {
+  position: static !important;
+}
+</style>
