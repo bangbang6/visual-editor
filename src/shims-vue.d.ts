@@ -4,3 +4,5 @@ declare module "*.vue" {
   export default component;
 }
 declare module "lego-mw-components";
+declare module "clipboard";
+declare module "file-saver";

@@ -1,6 +1,18 @@
 <template>
   <div class="content-container">
-    <template-list :list="testData"></template-list>
+    <a-row :gutter="16">
+      <template-list :list="testData"></template-list>
+    </a-row>
+    <a-row type="flex" justify="center">
+      <a-button
+        type="primary"
+        size="large"
+        @click="loadMorePage"
+        v-if="!isLastPage"
+      >
+        加载更多
+      </a-button>
+    </a-row>
   </div>
 </template>
 
@@ -11,6 +23,7 @@ import { computed, defineComponent, onMounted } from "vue";
 import { useStore } from "vuex";
 import { message } from "ant-design-vue";
 import axios from "axios";
+import useLoadMore from "@/store/useLoadMore";
 export default defineComponent({
   components: {
     TemplateList,
@@ -18,12 +31,19 @@ export default defineComponent({
   setup() {
     const store = useStore<GlobalDataProps>();
     const testData = computed(() => store.state.templates.data);
-    const currentUser = computed(() => store.state.user);
+    const total = computed(() => store.state.templates.totalTemplates);
+    const { loadMorePage, isLastPage } = useLoadMore("fetchTemplates", total, {
+      pageIndex: 0,
+      pageSize: 8,
+    });
+
     onMounted(() => {
-      store.dispatch("fetchTemplates");
+      loadMorePage();
     });
     return {
       testData,
+      loadMorePage,
+      isLastPage,
     };
   },
 });

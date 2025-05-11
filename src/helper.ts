@@ -1,4 +1,8 @@
 import { message } from "ant-design-vue";
+import axios from "axios";
+import html2canvas from "html2canvas";
+import { RespUploadData } from "./store/respTypes";
+import { saveAs } from "file-saver";
 
 interface CheckCondition {
   format?: string[];
@@ -77,3 +81,68 @@ export function clickInsideElement(e: Event, className: string) {
 export function isMobile(mobile: string) {
   return /^1[3-9]\d{9}$/.test(mobile);
 }
+function getCanvasBlob(canvas: HTMLCanvasElement) {
+  return new Promise<Blob | null>((resolve) => {
+    canvas.toBlob((blob) => {
+      resolve(blob);
+    });
+  });
+}
+export async function uploadFile<R = any>(
+  file: Blob,
+  url = "utils/upload-img",
+  fileName = "screenShot.png"
+) {
+  const newFile = file instanceof File ? file : new File([file], fileName);
+  const formData = new FormData();
+  formData.append(newFile.name, newFile);
+  const data = await axios.post<R>(url, formData, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return data;
+}
+export async function takeScreenShotAndUpload(ele: HTMLElement) {
+  const canvas = await html2canvas(ele, {
+    width: 475,
+    scale: 1,
+    useCORS: true,
+  });
+  const canvasBlob = await getCanvasBlob(canvas);
+  if (canvasBlob) {
+    const data = await uploadFile<RespUploadData>(canvasBlob);
+    return data;
+  }
+}
+export const objToQueryString = (queryObj: { [key: string]: any }) => {
+  return Object.keys(queryObj)
+    .map((key) => `${key}=${queryObj[key]}`)
+    .join("&");
+};
+export const toDateFormat = (date: Date) => {
+  return date.toISOString().split("T")[0];
+};
+
+export const toDateFromDays = (date: Date, n: number) => {
+  const newDate = new Date(date.getTime());
+  newDate.setDate(date.getDate() + n);
+  return newDate;
+};
+
+export const getDaysArray = (start: Date, end: Date) => {
+  const arr: any = [];
+  // eslint-disable-next-line no-unmodified-loop-condition
+  for (let dt = new Date(start); dt <= end; dt.setDate(dt.getDate() + 1)) {
+    arr.push(new Date(dt));
+  }
+  return arr;
+};
+
+export const objToArr = <T>(obj: { [key: string]: T }) => {
+  return Object.keys(obj).map((key) => obj[key]);
+};
+export const downloadImage = (url: string) => {
+  const fileName = url.substring(url.lastIndexOf("/") + 1);
+  saveAs(url, fileName);
+};

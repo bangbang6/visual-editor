@@ -9,11 +9,11 @@ import {
 } from "@/defaultProps";
 import { message } from "ant-design-vue";
 import { cloneDeep, keys } from "lodash-es";
-import { insertAt } from "@/helper";
+import { insertAt, objToQueryString } from "@/helper";
 import axios, { AxiosRequestConfig } from "axios";
 import { ActionPayload } from "./index";
 import { compile } from "path-to-regexp";
-import { RespWorkdData } from "./respTypes";
+import { RespData, RespListData, RespWorkdData } from "./respTypes";
 export type MoveDirection = "Up" | "Down" | "Left" | "Right";
 export const actionWrapper = (
   url: string,
@@ -24,25 +24,28 @@ export const actionWrapper = (
     context: ActionContext<any, any>,
     payload: ActionPayload = {}
   ) => {
-    const { urlParams, data } = payload;
-    console.log("urlParams", urlParams);
-    const newConfig = { ...config, data: payload.data, opName: commitName };
+    const { urlParams, searchParams, data } = payload;
+    const newConfig = {
+      ...config,
+      data: { ...payload.data },
+      opName: commitName,
+    };
     let newURL = url;
     if (urlParams) {
       const toPath = compile(url, { encode: encodeURIComponent });
       newURL = toPath(urlParams);
-      console.log("newURL", newURL);
     }
-    console.log("newURL", newURL);
+    if (searchParams) {
+      newURL += "?" + objToQueryString(searchParams);
+    }
     const resp = await axios(newURL, newConfig);
-    context.commit(commitName, resp.data);
-    return data;
+    context.commit(commitName, { payload, ...resp.data });
+    return resp.data;
   };
 };
 const debounceChange = (callback: (...args: any) => void, timeout = 60) => {
-  let timer = 0;
+  let timer;
   return (...args) => {
-    console.log("timer", timer);
     clearTimeout(timer);
     timer = setTimeout(() => {
       callback(...args);
@@ -81,10 +84,27 @@ const pushModifyHistoryDebounce = debounceChange(pushModifyHistory);
 
 export interface PageData {
   props: { [key: string]: any };
-  title: string;
-  id?: string;
+  setting?: { [key: string]: any };
+  id?: number;
+  title?: string;
   desc?: string;
   coverImg?: string;
+  uuid?: string;
+  latestPublishAt?: string;
+  updatedAt?: string;
+  isTemplate?: boolean;
+  isHot?: boolean;
+  isNew?: boolean;
+  author?: string;
+  copiedCount?: number;
+  status?: string;
+  user?: {
+    gender: string;
+    nickName: string;
+    picture: string;
+    userName: string;
+  };
+  shareImg?: string;
 }
 export interface HistoryProps {
   id: string;
@@ -92,6 +112,12 @@ export interface HistoryProps {
   type: "add" | "delete" | "modify";
   data: any;
   index?: number;
+}
+export interface ChannelProps {
+  id: number;
+  name: string;
+  workId: number;
+  status: number;
 }
 export interface EditorProps {
   // 供中间编辑器渲染的数组
@@ -107,6 +133,7 @@ export interface EditorProps {
   cachedOldValue: any;
   maxHistoryNumber: number;
   isDirty: boolean;
+  channels: ChannelProps[];
 }
 export interface ComponentData {
   // 这个元素的 属性，属性请详见下面 Partial全部变成问号
@@ -256,6 +283,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     cachedOldValue: null,
     maxHistoryNumber: 5,
     isDirty: false,
+    channels: [],
   },
   mutations: {
     addComponent: setDirtyWrapper((state, component: ComponentData) => {
@@ -299,10 +327,14 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         }
       }
     ),
-    updatePage: setDirtyWrapper((state, { key, value, isRoot }) => {
+    updatePage: setDirtyWrapper((state, { key, value, isRoot, level }) => {
+      console.log("level", level);
       if (isRoot) {
         console.log("key", key, value);
         state.page[key] = value;
+      } else if (level === "setting") {
+        console.log("value", value);
+        state.page.shareImg = value;
       } else {
         state.page.props[key] = value;
       }
@@ -465,10 +497,51 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     saveWork(state) {
       state.isDirty = false;
     },
+    fetchChannels(state, { data }: RespListData<ChannelProps>) {
+      state.channels = data.list;
+    },
+    createChannel(state, { data }: RespData<ChannelProps>) {
+      state.channels = [...state.channels, data];
+    },
+    deleteChannel(state, { payload }: RespData<any>) {
+      console.log("state.channels", state.channels, payload);
+      if (payload && payload.urlParams) {
+        const { urlParams } = payload;
+        state.channels = state.channels.filter(
+          (channel) => channel.id !== parseInt(urlParams.id)
+        );
+      }
+    },
+    publishTemplate(state) {
+      state.page.isTemplate = true;
+    },
   },
   actions: {
     fetchWork: actionWrapper("/works/:id", "fetchWork"),
     saveWork: actionWrapper("/works/:id", "saveWork", { method: "patch" }),
+    createWork: actionWrapper("/works", "createWork", {
+      method: "post",
+    }),
+    publishWork: actionWrapper("/works/publish/:id", "publishWOrk", {
+      method: "post",
+    }),
+    fetchChannels: actionWrapper(
+      "/channel/getWorkChannels/:id",
+      "fetchChannels"
+    ),
+    createChannel: actionWrapper("/channel/", "createChannel", {
+      method: "post",
+    }),
+    deleteChannel: actionWrapper("/channel/:id", "deleteChannel", {
+      method: "delete",
+    }),
+    publishTemplate: actionWrapper(
+      `/works/publish-template/:id`,
+      "publishTemplate",
+      {
+        method: "post",
+      }
+    ),
   },
   getters: {
     getCurrentElement: (state) => {

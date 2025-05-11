@@ -3,6 +3,8 @@ import { RespListData } from "./respTypes";
 import { ActionPayload, GlobalDataProps } from "./index";
 import axios, { AxiosRequestConfig } from "axios";
 import { compile } from "path-to-regexp";
+import { objToQueryString } from "@/helper";
+import { PageData } from "./editor";
 export const actionWrapper = (
   url: string,
   commitName: string,
@@ -12,94 +14,59 @@ export const actionWrapper = (
     context: ActionContext<any, any>,
     payload: ActionPayload = {}
   ) => {
-    const { urlParams, data } = payload;
-
-    const newConfig = { ...config, data: payload, opName: commitName };
+    const { urlParams, searchParams, data } = payload;
+    const newConfig = {
+      ...config,
+      data: { ...payload.data },
+      opName: commitName,
+    };
     let newURL = url;
     if (urlParams) {
       const toPath = compile(url, { encode: encodeURIComponent });
       newURL = toPath(urlParams);
-      console.log("newURL", newURL);
+    }
+    if (searchParams) {
+      newURL += "?" + objToQueryString(searchParams);
     }
     const resp = await axios(newURL, newConfig);
-    context.commit(commitName, resp.data);
-    return data;
+    context.commit(commitName, { payload, ...resp.data });
+    return resp.data;
   };
 };
 
-export interface TemplateProps {
-  id: number;
-  title: string;
-  coverImg: string;
-  author: string;
-  copiedCount: number;
-}
-export const testData: TemplateProps[] = [
-  {
-    id: 1,
-    coverImg:
-      "https://static.imooc-lego.com/upload-files/screenshot-889755.png",
-    title: "test title 1",
-    author: "viking",
-    copiedCount: 1,
-  },
-  {
-    id: 2,
-    coverImg:
-      "https://static.imooc-lego.com/upload-files/screenshot-677311.png",
-    title: "前端架构师直播海报",
-    author: "viking",
-    copiedCount: 1,
-  },
-  {
-    id: 3,
-    coverImg:
-      "https://static.imooc-lego.com/upload-files/screenshot-682056.png",
-    title: "前端架构师直播海报",
-    author: "viking",
-    copiedCount: 1,
-  },
-  {
-    id: 4,
-    coverImg:
-      "https://static.imooc-lego.com/upload-files/screenshot-677311.png",
-    title: "前端架构师直播海报",
-    author: "viking",
-    copiedCount: 1,
-  },
-  {
-    id: 5,
-    coverImg:
-      "https://static.imooc-lego.com/upload-files/screenshot-889755.png",
-    title: "前端架构师直播海报",
-    author: "viking",
-    copiedCount: 1,
-  },
-  {
-    id: 6,
-    coverImg:
-      "https://static.imooc-lego.com/upload-files/screenshot-677311.png",
-    title: "前端架构师直播海报",
-    author: "viking",
-    copiedCount: 1,
-  },
-];
+export type TemplateProps = Required<
+  Omit<PageData, "props" | "setting" | "shareImg">
+>;
 
 export interface TemplatesProps {
   data: TemplateProps[];
+  totalTemplates: number;
+  works: TemplateProps[];
+  totalWorks: number;
 }
 
 const templates: Module<TemplatesProps, GlobalDataProps> = {
   state: {
     data: [],
+    totalTemplates: 0,
+    works: [],
+    totalWorks: 0,
   },
   mutations: {
     fetchTemplates(state, rawData: RespListData<TemplateProps>) {
-      state.data = rawData.data.list;
+      const { list, count } = rawData.data;
+      state.data = [...state.data, ...list];
+      state.totalTemplates = count;
+    },
+    fetchWorks(state, rawData: RespListData<TemplateProps>) {
+      const { list, count } = rawData.data;
+      state.works = [...state.data, ...list];
+      state.totalWorks = count;
     },
   },
   actions: {
     fetchTemplates: actionWrapper("/templates", "fetchTemplates"),
+    fetchWorks: actionWrapper("/works", "fetchWorks"),
   },
   getters: {
     getTemplateById: (state) => (id: number) => {

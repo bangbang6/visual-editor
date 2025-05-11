@@ -3,6 +3,7 @@ import { ActionPayload, GlobalDataProps } from "./index";
 import axios, { AxiosRequestConfig } from "axios";
 import { RespData } from "./respTypes";
 import { compile } from "path-to-regexp";
+import { objToQueryString } from "@/helper";
 export const actionWrapper = (
   url: string,
   commitName: string,
@@ -12,18 +13,23 @@ export const actionWrapper = (
     context: ActionContext<any, any>,
     payload: ActionPayload = {}
   ) => {
-    const { urlParams, data } = payload;
-
-    const newConfig = { ...config, data: payload.data, opName: commitName };
+    const { urlParams, searchParams, data } = payload;
+    const newConfig = {
+      ...config,
+      data: { ...payload.data },
+      opName: commitName,
+    };
     let newURL = url;
     if (urlParams) {
       const toPath = compile(url, { encode: encodeURIComponent });
       newURL = toPath(urlParams);
-      console.log("newURL", newURL);
+    }
+    if (searchParams) {
+      newURL += "?" + objToQueryString(searchParams);
     }
     const resp = await axios(newURL, newConfig);
-    context.commit(commitName, resp.data);
-    return data;
+    context.commit(commitName, { payload, ...resp.data });
+    return resp.data;
   };
 };
 

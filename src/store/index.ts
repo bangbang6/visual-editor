@@ -14,6 +14,7 @@ export interface GlobalDataProps {
 export interface ActionPayload {
   urlParams?: { [key: string]: any };
   data?: any;
+  searchParams?: { [key: string]: any };
 }
 const store = createStore({
   modules: {

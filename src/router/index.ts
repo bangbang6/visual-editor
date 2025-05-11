@@ -7,6 +7,7 @@ import Login from "../views/Login.vue";
 import store from "@/store";
 import axios from "axios";
 import { message } from "ant-design-vue";
+import Mywork from "@/views/Mywork.vue";
 
 const router = createRouter({
   history: createWebHistory(),
@@ -27,6 +28,12 @@ const router = createRouter({
           name: "template",
           component: TemplateDetail,
           meta: { title: "模板信息" },
+        },
+        {
+          path: "mywork",
+          name: "MyWork",
+          component: Mywork,
+          meta: { requiredLogin: true, title: "我的设计列表" },
         },
       ],
     },

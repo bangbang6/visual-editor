@@ -41,7 +41,7 @@ export default defineComponent({
 <style>
 .app-container .global-spinner {
   position: fixed;
-  top: 10px;
+  top: 100px;
   right: 50%;
 }
 </style>

@@ -41,6 +41,8 @@ axios.interceptors.response.use(
   }
 );
 
+export const baseH5URL = "http://182.92.168.192:8082";
+
 createApp(App)
   .use(LegoComponents)
   .use(Antd)

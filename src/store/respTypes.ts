@@ -1,9 +1,11 @@
+import { ActionPayload } from ".";
 import { ComponentData, PageData } from "./editor";
 
 export interface RespData<T = {}> {
   errno: number;
   data: T;
   message?: string;
+  payload?: ActionPayload;
 }
 export interface ListData<T> {
   list: T[];
@@ -17,3 +19,7 @@ export interface WorkData extends Omit<PageData, "props"> {
 }
 export type RespListData<T> = RespData<ListData<T>>;
 export type RespWorkdData = RespData<WorkData>;
+export interface UploadData {
+  urls: string[];
+}
+export type RespUploadData = RespData<UploadData>;
