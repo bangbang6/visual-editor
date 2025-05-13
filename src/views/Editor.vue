@@ -143,7 +143,12 @@
             ></layer-list>
           </a-tab-pane>
           <a-tab-pane key="page" tab="页面设置">
-            <props-table :props="page.props" @change="pageChange">
+            <props-table
+              :props="page.props"
+              mutationName="updatePage"
+              :mutationExtraData="{ level: 'props' }"
+              @updated="adjustHeightOnUpload"
+            >
             </props-table>
           </a-tab-pane>
         </a-tabs>
@@ -183,7 +188,11 @@ import InputEdit from "@/components/InputEdit.vue";
 import UserProfile from "@/components/UserProfile.vue";
 import { Modal } from "ant-design-vue";
 import html2canvas from "html2canvas";
-import { takeScreenShotAndUpload } from "@/helper";
+import {
+  UploadImgProps,
+  imageDimensions,
+  takeScreenShotAndUpload,
+} from "@/helper";
 import PublishForm from "./PublishForm.vue";
 import PreviewForm from "./PreviewForm.vue";
 import LShape from "@/components/LShape.vue";
@@ -349,6 +358,27 @@ export default defineComponent({
       showpreview.value = true;
     };
 
+    const adjustHeightOnUpload = (event: {
+      data: UploadImgProps;
+      key: string;
+    }) => {
+      // check the key is background and data is correct
+      console.log("event", event);
+      if (event.key === "backgroundImage") {
+        imageDimensions(event.data.file).then((dimension) => {
+          const maxWidth = 375;
+          const rate = dimension.height / dimension.width;
+          if (rate > 1) {
+            store.commit("updatePage", {
+              key: "height",
+              value: rate * maxWidth + "px",
+              level: "props",
+            });
+          }
+        });
+      }
+    };
+
     return {
       components,
       defaultTextTemplates,
@@ -370,6 +400,7 @@ export default defineComponent({
       showPublishForm,
       showpreview,
       preview,
+      adjustHeightOnUpload,
     };
   },
 });

@@ -105,7 +105,7 @@ export async function uploadFile<R = any>(
 }
 export async function takeScreenShotAndUpload(ele: HTMLElement) {
   const canvas = await html2canvas(ele, {
-    width: 475,
+    width: 375,
     scale: 1,
     useCORS: true,
   });

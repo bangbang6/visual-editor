@@ -56,7 +56,7 @@ export default defineComponent({
   border-radius: 12px;
 }
 .poster-item .ant-card-cover {
-  height: 390px;
+  height: 360px;
 }
 .poster-item .ant-card-cover > img {
   width: 100%;
