@@ -16,9 +16,7 @@
           <a-menu-item key="2" v-if="smMode"
             ><router-link to="/mywork">我的作品</router-link></a-menu-item
           >
-          <a-menu-item key="3"
-            ><router-link to="/setting">个人设置</router-link></a-menu-item
-          >
+
           <a-menu-item key="4" @click="logout">登出</a-menu-item>
         </a-menu>
       </template>

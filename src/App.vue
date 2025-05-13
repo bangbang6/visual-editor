@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <a-spin v-if="showLoading" tip="加载中..." class="global-spinner" />
+    <!-- <a-spin v-if="showLoading" tip="加载中..." class="global-spinner" /> -->
     <router-view />
   </div>
 </template>

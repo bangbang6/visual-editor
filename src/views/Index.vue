@@ -3,7 +3,7 @@
     <a-layout :style="{ background: '#fff' }">
       <a-layout-header class="header">
         <div class="page-title">
-          <router-link to="/">慕课乐高</router-link>
+          <router-link to="/">海图设计</router-link>
         </div>
         <user-profile :user="user"></user-profile>
       </a-layout-header>
@@ -11,8 +11,8 @@
         <router-view></router-view>
       </a-layout-content>
     </a-layout>
-    <a-layout-footer>
-      © 慕课网（imooc.com）版权所有 | 津ICP备20000929号-2
+    <a-layout-footer align="center">
+      梦晚版权所有 | 津ICP备20000929号-2
     </a-layout-footer>
   </div>
 </template>
@@ -45,5 +45,6 @@ export default defineComponent({
 }
 .page-title {
   color: #fff;
+  font-size: 18px;
 }
 </style>

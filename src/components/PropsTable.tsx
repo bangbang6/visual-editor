@@ -4,6 +4,7 @@ import { PropsToForms, mapPropsToForms } from "../propsMap";
 import { TextComponentProps } from "../defaultProps";
 import { Input, InputNumber, Slider, Radio, Select } from "ant-design-vue";
 import ImageProcesser from "./ImageProcesser.vue";
+import TextAreaFix from "./TextAreaFix.vue";
 const mapToComponent = {
   "a-textarea": Input.TextArea,
   "a-input-number": InputNumber,
@@ -40,6 +41,7 @@ export default defineComponent({
   emits: ["change"],
   components: {
     ImageProcesser,
+    TextAreaFix,
   },
   setup(props, context) {
     const finalProps = computed(() => {

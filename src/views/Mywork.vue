@@ -1,5 +1,6 @@
 <template>
   <div class="mywork-container">
+    <h2>我的作品和模版</h2>
     <a-tabs @change="changeCategory">
       <a-tab-pane key="0" tab="我的作品"> </a-tab-pane>
       <a-tab-pane key="1" tab="我的模版"> </a-tab-pane>
@@ -223,6 +224,9 @@ export default defineComponent({
 <style>
 .mywork-container .ant-input-search {
   width: 30%;
+}
+.mywork-container {
+  padding: 40px 60px;
 }
 .searchResult {
   display: flex;

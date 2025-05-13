@@ -310,3 +310,4 @@ export const mapPropsToForms: MapTypes = {
     ],
   },
 };
+export default mapPropsToForms;

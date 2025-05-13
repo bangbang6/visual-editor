@@ -52,11 +52,11 @@ const router = createRouter({
       component: Login,
       meta: {
         redirectAlreadyLogin: true,
-        title: "登录到慕课乐高",
+        title: "登录到海图设计",
         disableLoading: true,
         meta: {
           redirectAlreadyLogin: true,
-          title: "登陆到木刻乐高",
+          title: "登陆到海图设计",
         },
       },
     },

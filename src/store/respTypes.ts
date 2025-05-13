@@ -15,6 +15,7 @@ export interface WorkData extends Omit<PageData, "props"> {
   content: {
     components: ComponentData[];
     props?: { [key: string]: any };
+    setting?: { [key: string]: any };
   };
 }
 export type RespListData<T> = RespData<ListData<T>>;

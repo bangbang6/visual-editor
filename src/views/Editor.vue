@@ -1,7 +1,12 @@
 <template>
   <div class="editor-container">
     <div class="wrapper" v-if="showpreview">
-      <preview-form :visible="showpreview"></preview-form>
+      <preview-form
+        :visible="showpreview"
+        @panel-close="showpreview = false"
+        @trigger-publish="publish"
+        @trigger-save="saveWork"
+      ></preview-form>
     </div>
     <a-modal
       title="发布成功"
@@ -25,35 +30,47 @@
             <h4>{{ page.title }}</h4>
           </input-edit>
         </div>
-        <a-menu
+        <a-tabs
           :selectable="false"
           theme="dark"
           mode="horizontal"
-          :style="{ lineHeight: '64px' }"
+          class="preview-tabs"
         >
-          <a-menu-item key="1">
-            <a-button type="primary" @click="preview">预览和设置</a-button>
-          </a-menu-item>
-          <a-menu-item key="2">
-            <a-button type="primary" @click="saveWork" :loading="saveIsLoading"
+          <a-tab key="1">
+            <a-button
+              type="primary"
+              @click="preview"
+              :style="{ marginRight: '10px' }"
+              >预览和设置</a-button
+            >
+          </a-tab>
+          <a-tab key="2">
+            <a-button
+              type="primary"
+              @click="saveWork"
+              :loading="saveIsLoading"
+              :style="{ marginRight: '10px' }"
               >保存</a-button
             >
-          </a-menu-item>
-          <a-menu-item key="3">
-            <a-button type="primary" @click="publish" :loading="isPublishing"
+          </a-tab>
+          <a-tab key="3">
+            <a-button
+              type="primary"
+              @click="publish"
+              :loading="isPublishing"
+              :style="{ marginRight: '50px' }"
               >发布</a-button
             >
-          </a-menu-item>
-          <a-menu-item key="4">
+          </a-tab>
+          <!-- <a-tab key="4">
             <user-profile :user="userInfo"></user-profile>
-          </a-menu-item>
-        </a-menu>
+          </a-tab> -->
+        </a-tabs>
       </a-layout-header>
     </a-layout>
     <a-layout>
-      <a-layout-sider width="300" style="background: #fff">
+      <a-layout-sider width="320" style="background: #fff">
         <div class="sidebar-container">
-          组件列表
           <components-list
             :list="defaultTextTemplates"
             @onItemClick="addItem"
@@ -157,7 +174,7 @@ import ImageProcesser from "@/components/ImageProcesser.vue";
 import LayerList from "@/components/LayerList.vue";
 import EditGroup from "@/components/EditGroup.vue";
 import PropsTable from "@/components/PropsTable.vue";
-import { forEach, pickBy } from "lodash-es";
+import { cloneDeep, forEach, pickBy } from "lodash-es";
 import initHotKeys from "@/plugins/hotKeys";
 import HistoryArea from "@/components/HistoryArea.vue";
 import initContextMenu from "@/plugins/contextMenu";
@@ -169,6 +186,7 @@ import html2canvas from "html2canvas";
 import { takeScreenShotAndUpload } from "@/helper";
 import PublishForm from "./PublishForm.vue";
 import PreviewForm from "./PreviewForm.vue";
+import LShape from "@/components/LShape.vue";
 export default defineComponent({
   components: {
     LText,
@@ -185,6 +203,7 @@ export default defineComponent({
     UserProfile,
     PublishForm,
     PreviewForm,
+    LShape,
   },
   setup() {
     /** 两个插件 */
@@ -209,28 +228,33 @@ export default defineComponent({
     );
     const saveIsLoading = computed(() => store.getters.isOpLoading("saveWork"));
     const pageChange = (e: any) => {
+      console.log("e", e);
       store.commit("updatePage", e);
     };
     const activePanel = ref("components");
     const addItem = (data: any) => {
       console.log("data", data);
-      store.commit("addComponent", data);
+      store.commit("addComponent", cloneDeep(data));
     };
     const setActive = (id: string) => {
       store.commit("setActive", id);
     };
     const handleChange = (e: any) => {
+      console.log("e3", e);
+
       store.commit("updateComponent", e);
     };
     const saveWork = () => {
-      const { title, props, coverImg } = page.value;
+      const { title, props, coverImg, desc, setting } = page.value;
       const payload = {
         title,
         coverImg,
         content: {
           components: components.value,
+          setting,
           props,
         },
+        desc,
       };
       store.dispatch("saveWork", {
         data: payload,
@@ -515,5 +539,8 @@ header {
 .preview-list.canvas-fix > * {
   /* position: absolute; */
   /* max-height: none; */
+}
+.preview-tabs {
+  margin-top: -40px;
 }
 </style>

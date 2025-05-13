@@ -95,7 +95,7 @@ export const imageDefaultProps = {
 // this contains all default props for all the components
 // useful for inserting new component into the store
 export const componentsDefaultProps: DefaultPropsType = {
-  " ": {
+  "l-text": {
     props: {
       ...textDefaultProps,
       fontSize: "14px",
@@ -137,4 +137,16 @@ export const textStylePropNames = without(
 export const imageStylePropsNames = without(
   Object.keys(imageDefaultProps),
   "src"
+);
+export interface ShapeComponentProps extends CommonComponentProps {
+  backgroundColor: string;
+}
+export const shapeDefaultProps: ShapeComponentProps = {
+  backgroundColor: "",
+  ...commonDefaultProps,
+};
+export const shapeStylePropsNames = without(
+  Object.keys(shapeDefaultProps),
+  "actionType",
+  "url"
 );

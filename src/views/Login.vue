@@ -3,9 +3,7 @@
     <a-row>
       <a-col :span="12" class="aside">
         <div class="aside-inner">
-          <router-link to="/">
-            <img alt="Vue logo" src="../assets/logo2.png" class="logo-img" />
-          </router-link>
+          <div class="logo-title">海图设计</div>
           <h2>这是我用过的最好的建站工具</h2>
           <span class="text-white-70">王铁锤, Google</span>
         </div>
@@ -18,7 +16,7 @@
           layout="vertical"
         >
           <h2>欢迎回来</h2>
-          <p class="subTitle">使用手机号码和验证码登录到慕课乐高</p>
+          <p class="subTitle">使用手机号码和验证码登录到海图设计</p>
           <a-form-item label="手机号码" required name="username">
             <a-input v-model:value="form.username" placeholder="手机号码">
               <template v-slot:prefix
@@ -221,5 +219,10 @@ export default defineComponent({
   padding: 20px 45px 20px 30px;
   background-color: #ebf2ff;
   border-color: #ebf2ff;
+}
+.logo-title {
+  font-size: 18px;
+  color: #fff;
+  margin-bottom: 20px;
 }
 </style>

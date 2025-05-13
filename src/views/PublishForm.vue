@@ -9,7 +9,10 @@
         <a-row>
           <a-col :span="6">
             <img
-              src="http://vue-maker.oss-cn-hangzhou.aliyuncs.com/vue-marker/5f79389d4737571e2e1dc7cb.png"
+              :src="
+                (page.setting && page.setting.shareImg) ||
+                'http://static.imooc-lego.com/upload-files/528w-0ilmEQMomZ8-108048.png'
+              "
               :alt="page.title"
             />
           </a-col>

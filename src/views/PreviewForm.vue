@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-mutating-props -->
 <template>
   <div class="publish-form-container" v-if="visible">
     <div class="final-preview">
@@ -21,8 +22,8 @@
       title="设置面板"
       placement="right"
       width="400"
-      :closeable="true"
-      :visible="visible"
+      v-model:open="visible"
+      :closable="false"
     >
       <div>
         <a-row type="flex" align="middle" :style="{ marginBottom: '20px' }">
@@ -36,8 +37,8 @@
           <a-col :span="10">
             <img
               width="100"
-              :src="pageData.shareImg"
-              v-if="pageData.shareImg"
+              :src="pageData.setting && pageData.setting.shareImg"
+              v-if="pageData.setting && pageData.setting.shareImg"
             />
             <styled-uploader
               text="上传封面图"
@@ -175,6 +176,7 @@ export default defineComponent({
         key,
         value,
         level: settings ? "setting" : false,
+        isRoot: true,
       });
     };
     const updateAvatar = (rawData) => {
@@ -189,11 +191,15 @@ export default defineComponent({
     };
     const checkAndpublish = () => {
       validate().then(() => {
+        context.emit("panel-close", true);
+
         context.emit("trigger-publish", true);
       });
     };
     const saveWork = () => {
       validate().then(() => {
+        context.emit("panel-close", true);
+
         context.emit("trigger-save", true);
       });
     };

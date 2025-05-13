@@ -23,7 +23,7 @@
         ><template><ScissorOutlined /></template>裁剪图片</a-button
       >
       <a-button v-if="showDelete" type="danger" @click="handleDelete">
-        <template v-slot:icon><DeleteOutlined /></template>删除图片
+        删除图片
       </a-button>
     </div>
   </div>
@@ -37,7 +37,6 @@ import {
   UploadOutlined,
   ScissorOutlined,
   LoadingOutlined,
-  DeleteOutlined,
 } from "@ant-design/icons-vue";
 // @ts-ignore
 import Cropper from "cropperjs";

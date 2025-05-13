@@ -287,8 +287,10 @@ const editor: Module<EditorProps, GlobalDataProps> = {
   },
   mutations: {
     addComponent: setDirtyWrapper((state, component: ComponentData) => {
+      component.id = uuidv4();
       component.layerName = "图层" + (state.components.length + 1);
       state.components.push(component);
+      console.log("state.components", state.components);
       pushHistory(state, {
         id: uuidv4(),
         componentId: component.id,
@@ -329,15 +331,16 @@ const editor: Module<EditorProps, GlobalDataProps> = {
     ),
     updatePage: setDirtyWrapper((state, { key, value, isRoot, level }) => {
       console.log("level", level);
-      if (isRoot) {
+      if (level === "setting") {
+        console.log("value", value);
+        state.page.setting = { shareImg: value };
+      } else if (isRoot) {
         console.log("key", key, value);
         state.page[key] = value;
-      } else if (level === "setting") {
-        console.log("value", value);
-        state.page.shareImg = value;
       } else {
         state.page.props[key] = value;
       }
+      console.log(" state.page", state.page);
     }),
     copyComponent(state, id) {
       const currentComponent = store.getters.getElement(id);
@@ -491,6 +494,9 @@ const editor: Module<EditorProps, GlobalDataProps> = {
       state.page = { ...state.page, ...rest };
       if (content.props) {
         state.page.props = content.props;
+      }
+      if (content.setting) {
+        state.page.setting = content.setting;
       }
       state.components = content.components;
     },

@@ -5,8 +5,9 @@
     :class="{ active: active }"
     :style="styles"
     ref="editWrapper"
-    @mousedown="startMove"
     :data-component-id="id"
+    @mousedown="startMove"
+    draggable="false"
   >
     <slot></slot>
     <div class="resizers">
@@ -81,27 +82,7 @@ export default defineComponent({
         top,
       };
     };
-    const handleMove = (e: MouseEvent) => {
-      const { left, top } = caulateMovePosition(e);
-      const currentElement = editWrapper.value;
-      isMoving = true;
 
-      if (currentElement) {
-        currentElement.style.top = `${top}px`;
-        currentElement.style.left = `${left}px`;
-      }
-    };
-    const handleMouseUp = (e: MouseEvent) => {
-      document.removeEventListener("mousemove", handleMove);
-      if (isMoving) {
-        const { left, top } = caulateMovePosition(e);
-        context.emit("update-position", { left, top, id: props.id });
-        isMoving = false;
-      }
-      nextTick(() => {
-        document.removeEventListener("mouseup", handleMouseUp);
-      });
-    };
     const startMove = (e: MouseEvent) => {
       const currentElement = editWrapper.value;
       if (currentElement) {
@@ -109,6 +90,29 @@ export default defineComponent({
         gap.x = e.clientX - left;
         gap.y = e.clientY - top;
       }
+      const handleMove = (e: MouseEvent) => {
+        console.log("move");
+        const { left, top } = caulateMovePosition(e);
+        const currentElement = editWrapper.value;
+        isMoving = true;
+        console.log("currentElement", currentElement);
+        if (currentElement) {
+          currentElement.style.top = `${top}px`;
+          currentElement.style.left = `${left}px`;
+        }
+      };
+      const handleMouseUp = (e: MouseEvent) => {
+        console.log("up");
+        document.removeEventListener("mousemove", handleMove);
+        if (isMoving) {
+          const { left, top } = caulateMovePosition(e);
+          context.emit("update-position", { left, top, id: props.id });
+          isMoving = false;
+        }
+        nextTick(() => {
+          document.removeEventListener("mouseup", handleMouseUp);
+        });
+      };
       document.addEventListener("mousemove", handleMove);
       document.addEventListener("mouseup", handleMouseUp);
     };
@@ -191,7 +195,6 @@ export default defineComponent({
       styles,
       editWrapper,
       startMove,
-      handleMove,
       startResize,
     };
   },
@@ -214,8 +217,6 @@ export default defineComponent({
 }
 .edit-wrapper > * {
   position: static !important;
-  width: 100% !important;
-  height: 100% !important;
 }
 .edit-wrapper.active .resizers .resizer {
   width: 10px;

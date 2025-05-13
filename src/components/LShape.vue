@@ -1,24 +1,23 @@
 <template>
-  <img
+  <div
     :style="styleProps"
-    class="l-image-component"
+    class="l-shape-component"
     @click.prevent="handleClick"
-    :src="imageSrc"
-  />
+  ></div>
 </template>
 <script lang="ts">
 import { defineComponent } from "vue";
-import useComponentCommon from "../hooks/useComponentCommon";
 import {
   transformToComponentProps,
-  imageDefaultProps,
-  imageStylePropsNames,
+  shapeDefaultProps,
+  shapeStylePropsNames,
 } from "../defaultProps";
-const defaultProps = transformToComponentProps(imageDefaultProps);
+import useComponentCommon from "@/hooks/useComponentCommon";
+const defaultProps = transformToComponentProps(shapeDefaultProps);
 
 // array that contains style props
 export default defineComponent({
-  name: "l-image",
+  name: "l-shape",
   props: {
     ...defaultProps,
   },
@@ -27,7 +26,7 @@ export default defineComponent({
     // 抽离并且获得 styleProps
     const { styleProps, handleClick } = useComponentCommon(
       props,
-      imageStylePropsNames
+      shapeStylePropsNames
     );
     return {
       styleProps,
@@ -36,12 +35,3 @@ export default defineComponent({
   },
 });
 </script>
-
-<style scoped>
-.l-image-component {
-  max-width: 100%;
-  position: relative !important;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-</style>
