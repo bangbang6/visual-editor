@@ -163,9 +163,11 @@ export default defineComponent({
       store.dispatch("deleteWork", id);
     };
     const onCopy = (id: number) => {
-      store.dispatch("copyWork", id).then(({ data }) => {
-        router.push(`/editor/${data.id}`);
-      });
+      store
+        .dispatch("copyWork", { urlParams: { id: `${id}` } })
+        .then(({ data }) => {
+          router.push(`/editor/${data.id}`);
+        });
     };
     const sendGift = (data: { id: number; username: string }) => {
       store.dispatch("transferWork", data).then((data) => {
