@@ -548,6 +548,7 @@ const editor: Module<EditorProps, GlobalDataProps> = {
         method: "post",
       }
     ),
+    copyWork: actionWrapper(`/works/copy/:id`, "copyWork", { method: "post" }),
   },
   getters: {
     getCurrentElement: (state) => {

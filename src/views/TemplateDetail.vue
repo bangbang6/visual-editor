@@ -17,9 +17,11 @@
         </div>
         <div class="use-button">
           <router-link to="/editor">
-            <a-button type="primary" size="large"> 使用模版 </a-button>
+            <a-button type="primary" size="large" @click="onCopy(template.id)">
+              使用模版
+            </a-button>
           </router-link>
-          <a-button size="large"> 下载图片海报 </a-button>
+          <a-button size="large" @click="download"> 下载图片海报 </a-button>
         </div>
       </a-col>
     </a-row>
@@ -27,21 +29,38 @@
 </template>
 
 <script lang="ts">
+import { downloadImage } from "@/helper";
 import { GlobalDataProps } from "@/store";
 import { computed, defineComponent } from "vue";
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import { useStore } from "vuex";
 
 export default defineComponent({
   setup() {
     const route = useRoute();
+    const router = useRouter();
+
     const store = useStore<GlobalDataProps>();
     const currentId = route.params.id as string;
     const template = computed(() =>
       store.getters.getTemplateById(parseInt(currentId))
     );
 
-    return { route, template };
+    const download = () => {
+      downloadImage(template.value.coverImg);
+    };
+    const onCopy = (id: number) => {
+      if (store.state.user.isLogin) {
+        store
+          .dispatch("copyWork", { urlParams: { id: `${id}` } })
+          .then(({ data }) => {
+            router.push(`/editor/${data.id}`);
+          });
+      } else {
+        router.push("/login");
+      }
+    };
+    return { route, template, download, onCopy };
   },
 });
 </script>
