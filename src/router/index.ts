@@ -21,7 +21,7 @@ const router = createRouter({
           path: "",
           name: "home",
           component: Home,
-          meta: { title: "欢迎来到木刻乐高" },
+          meta: { title: "欢迎来到海图设计" },
         },
         {
           path: "template/:id",
