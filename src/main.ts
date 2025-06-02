@@ -39,6 +39,6 @@ axios.interceptors.response.use(
   }
 );
 
-export const baseH5URL = "http://182.92.168.192:8082";
+export const baseH5URL = "http://82.157.160.85:8082";
 
 createApp(App).use(Antd).use(router).use(store).mount("#app");
