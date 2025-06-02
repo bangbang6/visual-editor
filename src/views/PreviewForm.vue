@@ -270,6 +270,6 @@ export default defineComponent({
   background-size: 50px;
 }
 iframe {
-  background-color: "#fff";
+  background-color: #fff;
 }
 </style>
