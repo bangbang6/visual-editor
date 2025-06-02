@@ -269,4 +269,7 @@ export default defineComponent({
   background: url("~@/assets/loading.svg") 50% 50% no-repeat;
   background-size: 50px;
 }
+iframe {
+  background-color: "#fff";
+}
 </style>
