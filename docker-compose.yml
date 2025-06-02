@@ -1,0 +1,12 @@
+version: "3"
+services:
+  admin-server:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: mw-editor # 依赖于当前 Dockerfile 创建镜像
+    container_name: mw-editor
+    extra_hosts:
+      - host.docker.internal:host-gateway
+    ports:
+      - 8093:3003 # 宿主机通过 8084 访问
