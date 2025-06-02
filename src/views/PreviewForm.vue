@@ -12,7 +12,6 @@
             frameborder="0"
             width="375"
             :height="pageData.props && pageData.props.height"
-            class="iframe-placeholder"
           ></iframe>
         </div>
       </div>
