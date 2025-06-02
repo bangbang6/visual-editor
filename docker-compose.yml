@@ -9,4 +9,4 @@ services:
     extra_hosts:
       - host.docker.internal:host-gateway
     ports:
-      - 8093:3003 # 宿主机通过 8084 访问
+      - 8093:80 # 宿主机通过 8093 访问
